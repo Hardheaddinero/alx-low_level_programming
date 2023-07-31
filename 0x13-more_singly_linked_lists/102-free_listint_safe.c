@@ -1,39 +1,65 @@
 #include "lists.h"
 
 /**
- *find_listint_loop - a program that finds the loop in a linked list
+ *free_listp2 - a program that frees a listint_t list
  *@head: head
- *Return: address of the node where it starts
+ *Return: nothing
  */
-listint_t *find_listint_loop(listint_t *head)
+void free_listp2(listp_t **head)
 {
-	listint_t *is, *bins;
+	listp_t *puts, *libs;
 
-	is = head;
-	bins = head;
-	while (head && is && is->next)
+	if (head != NULL)
 	{
-		head = head->next;
-		is = is->next->next;
-
-		if (head == is)
+		libs = *head;
+		while ((puts = libs) != NULL)
 		{
-			head = bins;
-			bins = is;
-			while (1)
-			{
-				is = bins;
-				while (is->next != head && is->next != bins)
-				{
-					is = is->next;
-				}
-				if (is->next == head)
-					break;
-
-				head = head->next;
-			}
-			return (is->next);
+			libs = libs->next;
+			free(puts);
 		}
+		*head = NULL;
 	}
-	return (NULL);
+}
+
+/**
+ *free_listint_safe - a program that frees a listint_t list
+ *@h: head
+ *Return: size of list that has been freed
+ */
+size_t free_listint_safe(listint_t **h)
+{
+	size_t temps = 0;
+	listp_t *user, *latest, *sum;
+	listint_t *libs;
+
+	user = NULL;
+	while (*h != NULL)
+	{
+		latest = malloc(sizeof(listp_t));
+		if (latest == NULL)
+			exit(98);
+		latest->p = (void *)*h;
+		latest->next = user;
+		user = latest;
+
+		sum = user;
+
+		while (sum->next != NULL)
+		{
+			sum = sum->next;
+			if (*h == sum->p)
+			{
+				*h = NULL;
+				free_listp2(&user);
+				return (temps);
+			}
+		}
+		libs = *h;
+		*h = (*h)->next;
+		free(libs);
+		temps++;
+	}
+	*h = NULL;
+	free_listp2(&user);
+	return (temps);
 }
