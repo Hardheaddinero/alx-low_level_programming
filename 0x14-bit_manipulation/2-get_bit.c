@@ -17,3 +17,4 @@ int get_bit(unsigned long int n, unsigned int index)
 	if (bin == div)
 		return (1);
 	return (0);
+}
